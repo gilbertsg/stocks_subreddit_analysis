@@ -1,6 +1,29 @@
+![alt text](./images/readme_1_banner.png)
+
+---
+
 Please view the [slide deck](https://docs.google.com/presentation/d/e/2PACX-1vTk2uzgKXg3ihJK_qH6Woyv1xC5tjKljMW7dDOSQ1-yOMP43HEBWVFczLWz7uyMWMU0e75lEMlDvGfE/pub?start=false&loop=false) for a more consolidated explanation of the project.
 
-# Problem Statement
+---
+
+# Summary
+- Developed model for classifying posts for r/wsb vs r/stocks for targeted advertising
+    - Highly imbalanced dataset, requires oversampling technique
+    - Used various vectorizer, sampling method, and classifier model
+    - Best model: Multinomial NB w/ CVEC + SMOTE
+- Investigated Data Drift on one year's worth of data
+    - Models trained on one month performs worse when predicting other months
+    - Using cumulative data for training results in better prediction
+- Analyzed correlation between subreddits' sentiment and future stock performance
+    - Posts in both subreddits tend to have positive sentiment
+    - Sentiment of the subreddits unable to predict stock performance
+
+##### Keywords:
+Natural Language Processing, Classification, Data Drift, Sentiment Analysis, Stock Data
+
+---
+
+# 0. Problem Statement
 
 ## Project Objective
 Our clients (Robinhood Markets Inc.) aims to expand its services from serving short-term options/stocks traders (such as those found in r/WallStreetBets) and start serving long-term investors (such as those found in r/stocks).  However, since these two subreddits have different interests, jargons, and audience, they would need to properly target the advertisement to the correct subreddit (r/WallStreetBets would not be interested in long-term investment). Hence, we are tasked with developing a model that can classify whether a post belongs to to subreddit r/WallStreetBets or r/stocks, In order to serve the correct post with the corresponding advertisement.
@@ -26,6 +49,12 @@ Based on the definitions above we are aiming to strike a balance between precisi
 
 ## Secondary Objective:
 The secondary objective for this project is to analyze the correlation between the subreddits' sentiments on a particular stock against the future performance of that stock (defined as price change in 7-days). This is to assess whether these subreddits have any predictive capability for making stock picks. If we find that these subreddits are able to have some predictive capability, we can use the subreddits prediction to inform/supplement the analysis of the clients' Investment team in making their stock purchase decision.
+
+---
+
+# Classification Model Process Flowchart
+
+![alt text](./images/readme_2_process.png)
 
 ---
 
@@ -129,18 +158,18 @@ In order to attempt to improve the performance of the model, we have investigate
 
 The table below summarizes the prediction accuracy of the final model with various adjustments made to the text preprocessing and the count vectorizer parameters.
 
-|    | variations                                     |   accuracy |   c1_precision |   c1_recall |   c1_f1 |   c0_f1 |   macro_avg_f1 |   wt_avg_f1 |
-|:---|:-----------------------------------------------|-----------:|---------------:|------------:|--------:|--------:|---------------:|------------:|
-|    | Final model (Multi-NB, CVEC, SMOTE)            |      0.844 |          0.54  |       0.504 |   0.522 |   0.907 |          0.714 |       0.842 |
-|    | only consider posts with 3 words or more       |      0.846 |          0.577 |       0.489 |   0.529 |   0.908 |          0.718 |       0.84  |
-|    | only consider posts with 10 words or more      |      0.865 |          0.681 |       0.291 |   0.408 |   0.924 |          0.666 |       0.841 |
-|    | converting emoji into text                     |      0.845 |          0.542 |       0.514 |   0.528 |   0.907 |          0.718 |       0.843 |
-|    | combining title and selftext                   |      0.832 |          0.502 |       0.494 |   0.498 |   0.899 |          0.699 |       0.831 |
-|    | change n-gram range to (1,1)                   |      0.797 |          0.432 |       0.64  |   0.516 |   0.872 |          0.694 |       0.812 |
-|    | change n-gram range to (1,2)                   |      0.831 |          0.5   |       0.565 |   0.531 |   0.897 |          0.714 |       0.835 |
-|    | change max-features to 118167 (10% of default) |      0.816 |          0.465 |       0.623 |   0.533 |   0.885 |          0.709 |       0.826 |
-|    | change max-features to 59083 (5% of default)   |      0.814 |          0.462 |       0.622 |   0.53  |   0.884 |          0.707 |       0.824 |
-|    | change max-features to 11817 (1% of default)   |      0.811 |          0.455 |       0.601 |   0.518 |   0.882 |          0.7   |       0.821 |
+| variations                                     |   accuracy |   c1_precision |   c1_recall |   c1_f1 |   c0_f1 |   macro_avg_f1 |   wt_avg_f1 |
+|:-----------------------------------------------|-----------:|---------------:|------------:|--------:|--------:|---------------:|------------:|
+| Final model (Multi-NB, CVEC, SMOTE)            |      0.844 |          0.54  |       0.504 |   0.522 |   0.907 |          0.714 |       0.842 |
+| only consider posts with 3 words or more       |      0.846 |          0.577 |       0.489 |   0.529 |   0.908 |          0.718 |       0.84  |
+| only consider posts with 10 words or more      |      0.865 |          0.681 |       0.291 |   0.408 |   0.924 |          0.666 |       0.841 |
+| converting emoji into text                     |      0.845 |          0.542 |       0.514 |   0.528 |   0.907 |          0.718 |       0.843 |
+| combining title and selftext                   |      0.832 |          0.502 |       0.494 |   0.498 |   0.899 |          0.699 |       0.831 |
+| change n-gram range to (1,1)                   |      0.797 |          0.432 |       0.64  |   0.516 |   0.872 |          0.694 |       0.812 |
+| change n-gram range to (1,2)                   |      0.831 |          0.5   |       0.565 |   0.531 |   0.897 |          0.714 |       0.835 |
+| change max-features to 118167 (10% of default) |      0.816 |          0.465 |       0.623 |   0.533 |   0.885 |          0.709 |       0.826 |
+| change max-features to 59083 (5% of default)   |      0.814 |          0.462 |       0.622 |   0.53  |   0.884 |          0.707 |       0.824 |
+| change max-features to 11817 (1% of default)   |      0.811 |          0.455 |       0.601 |   0.518 |   0.882 |          0.7   |       0.821 |
 
 
 The following variations are made to the final model:
@@ -211,7 +240,7 @@ The following figure summarizes the odds ratio of each feature occuring in eithe
         - "loss (or gain) porn" - where members would post the outcome of a highly risky play which resulted in massive wins or a complete wipeout of their account
         - "diamond hands" - which is a term for someone who has a high-risk tolerance for high volatility stocks or assets that they own
 
-## 3.3 On the Generalizability of Model
+## 3.3 Data Drift and Model Generalizability
 
 Up to this point, we have used one year worth of data for both the training and testing data set. However, in reality when the model is put into production, we will be using a prebuilt model to predict posts in realtime. We can assume that the model is refreshed monthly.
 
@@ -246,6 +275,10 @@ The figure on the left is Based on the previous configuration (i.e.: using once 
 
 # 4. Sentiment Analysis and Stock Performance
 For the final section of this study, we have conducted a sentiment analysis on all the posts in both subreddits. The sentiment from post containing mentions of a particular stock will then be analyzed, and compared against the stock's future performance.
+
+# Sentiment and Finance Analysis Flowchart
+
+![alt text](./images/readme_3_process_2.png)
 
 The sentiment analysis were conducted using VADER Sentiment Intensity Analyzer. Additinoal words and tokens were added from various sources [[source 1]](https://medium.com/nerd-for-tech/wallstreetbets-sentiment-analysis-on-stock-prices-using-natural-language-processing-ed1e9e109a37) [[source 2]](http://mx.nthu.edu.tw/~chungchichen/papers/NTUSD-Fin_Market_Sentiment_Dictionary_for_Financial_Social_Media_Data.pdf) in order to account for the peculiar vocabularies from the specific r/wsb subreddit (see source 1) and finance discourse in social media in genera (see source 2).
 
@@ -313,3 +346,15 @@ In fact if observe the Pearson correlation scores for all of the stock tickers (
 The heatmap above shows that despite filtering out the noise (i.e.: posts with low scores), the sentiment scores from r/wsb and r/stocks CANNOT be used to predict the future performance of a stock CONSISTENTLY.
 
 Therefore, traders and quants should look elsewhere when looking for getting stock predictions, perhaps even a [goldfish named Fredrick](https://www.youtube.com/watch?v=USKD3vPD6ZA) or a [hamster called Mr. Goxx](https://www.npr.org/2021/09/25/1040683057/crypto-trading-hamster-goxx-warren-buffet-s-p-500)?
+
+---
+# Future Works
+
+- Part 1
+    - Obtain more posts data from previous months
+    - Trying other models (e.g.: XGBoost, kNN, etc)
+    - Observe misclassified posts
+    - Productionize model
+- Part 2
+    - Consider all stock tickers in analysis (incl. penny stocks), as wsb is known for analysis on those types of stocks
+    - Manual modification for emoji-to-text mapping
