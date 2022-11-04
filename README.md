@@ -4,6 +4,10 @@
 
 Please view the [slide deck](https://docs.google.com/presentation/d/e/2PACX-1vTk2uzgKXg3ihJK_qH6Woyv1xC5tjKljMW7dDOSQ1-yOMP43HEBWVFczLWz7uyMWMU0e75lEMlDvGfE/pub?start=false&loop=false) for a more consolidated explanation of the project.
 
+The prediction model has also been deployed to Google Cloud Run API, which can generate predictions via this [streamlit app](https://gilbertsg-stocks-subreddit-analysis-streamlit-app-r9j5h3.streamlit.app/).  
+
+A [Tableau Public dashboard](https://tinyurl.com/up59cvr4) has been developed for further exploration of the stock-performance-vs-sentiment analysis.
+
 ---
 
 # Summary
@@ -186,7 +190,8 @@ The following variations are made to the final model:
 - Reducing features considered in the word vectorizer to 10, 5, and 1% of the default
     - Imposing a maximum limit on the number of features resulted in a slight drop in overall accuracy. Again this is because we are Reducing the number of training information available to the model.
     - There is only a slight reduction in prediction accuracy. Therefore, it might be a good idea to reduce the number of features used When conducting hyperparameter tuning for the various models.
-
+   
+The prediction model has also been deployed to Google Cloud Run API, which can generate predictions via this [streamlit app](https://gilbertsg-stocks-subreddit-analysis-streamlit-app-r9j5h3.streamlit.app/).  
 
 The model with default parameters (considering all words in the title, with an n-gram range of (1,3) and using all features) performs the best out of all the different variations tested in this study (with the exception of that with adding in the emoji data).
 
@@ -338,6 +343,8 @@ Once the post with lower scores are filtered out, we can see that there are a sl
 However, what we don't see are the other stock tickers (with the exact same metrics) such as DWAC (Digital World Acquisition Corp) shown below, which has the complete opposite correlation (and an even higher R2 and lower P-value):
 
 ![alt text](./images/Sentiment_7_3_scatter3.png)
+
+A [Tableau Public dashboard](https://tinyurl.com/up59cvr4) has been developed for further exploration of the stock-performance-vs-sentiment analysis.
 
 In fact if observe the Pearson correlation scores for all of the stock tickers (see below), we can see that the correlation is pretty much random across the board.
 
